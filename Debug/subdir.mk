@@ -4,13 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../02Triangle.cpp 
+../03Shaders1.cpp 
 
 OBJS += \
-./02Triangle.o 
+./03Shaders1.o 
 
 CPP_DEPS += \
-./02Triangle.d 
+./03Shaders1.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
