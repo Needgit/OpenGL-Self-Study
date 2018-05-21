@@ -7,7 +7,12 @@
 #include <iostream>
 #include <math.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "GLshader.h"
+
 
 static GLFWwindow* window;
 
@@ -56,7 +61,9 @@ void loadImage(const GLchar* path, GLuint &TBO)
 
 void onStart()
 {
-	shader = GLshader("Shaders/04Texture.vs", "Shaders/04Texture.fs");
+	glEnable(GL_DEPTH_TEST);
+
+	shader = GLshader("Shaders/05Transform.vs", "Shaders/05Transform.fs");
 
 	// Texture Repeat:
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -105,9 +112,25 @@ void onShutdown()
 void display()
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	shader.use();
+
+	// Move Camera:
+	glm::mat4 view;
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+	view = glm::rotate(view, (float)glfwGetTime() * glm::radians(25.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	unsigned int uView = glGetUniformLocation(shader.ID, "view");
+	glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(view));
+
+    // Do Perspective:
+	static GLint width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glm::mat4 projection = glm::perspective<GLfloat>(glm::radians(45.0f), width / (GLfloat)height, 0.1f, 100.0f);
+	unsigned int transformLoc = glGetUniformLocation(shader.ID, "projection");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+	// Draw objects:
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture1);
@@ -116,7 +139,19 @@ void display()
 
 	glBindVertexArray(VAO);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	// Draw 3 triangles and position them accordingly to index:
+	for (GLint i = 0; i < 3; i++)
+	{
+		glm::mat4 world;
+		world = glm::rotate(world, glm::radians(i * 120.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		world = glm::translate(world, glm::vec3(0.0f, 0.0f, 0.145f));
+		world = glm::rotate(world, glm::radians(-16.75f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		unsigned int uWorld = glGetUniformLocation(shader.ID, "world");
+		glUniformMatrix4fv(uWorld, 1, GL_FALSE, glm::value_ptr(world));
+
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+	}
 }
 
 

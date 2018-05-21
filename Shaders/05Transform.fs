@@ -10,5 +10,5 @@ uniform sampler2D uTexture2;
 
 void main(void)
 {
-    fColor = mix(texture(uTexture1, tCoord), texture(uTexture2, tCoord), 0.25);
+    fColor = mix(texture(uTexture1, tCoord), texture(uTexture2, tCoord), 1);
 }
