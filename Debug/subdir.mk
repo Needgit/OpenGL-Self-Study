@@ -5,19 +5,22 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../GLcamera.cpp \
-../GLobject.cpp \
+../GLmesh.cpp \
+../GLmodel.cpp \
 ../GLshader.cpp \
 ../Main.cpp 
 
 OBJS += \
 ./GLcamera.o \
-./GLobject.o \
+./GLmesh.o \
+./GLmodel.o \
 ./GLshader.o \
 ./Main.o 
 
 CPP_DEPS += \
 ./GLcamera.d \
-./GLobject.d \
+./GLmesh.d \
+./GLmodel.d \
 ./GLshader.d \
 ./Main.d 
 

@@ -1,7 +1,5 @@
 #include "GLcamera.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 GLcamera::GLcamera()
 {
@@ -54,6 +52,13 @@ void GLcamera::setShader(GLshader &shader)
 }
 
 
+void GLcamera::setWindowSize(GLint width, GLint height)
+{
+	this->window_width  = width;
+	this->window_height = height;
+}
+
+
 void GLcamera::update()
 {
 	glm::mat4 view;
@@ -63,4 +68,10 @@ void GLcamera::update()
 	view = glm::rotate(view, glm::radians(this->rotation.z), glm::vec3(0, 0, 1));
 
 	shader->setMat4("view", view);
+
+    // Do Perspective:
+	glm::mat4 projection = glm::perspective<GLfloat>(glm::radians(45.0f),
+			this->window_width / (GLfloat)this->window_height, 0.1f, 100.0f);
+
+	shader->setMat4("projection", projection);
 }
