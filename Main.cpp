@@ -22,11 +22,7 @@ static GLcamera camera;
 static GLmodel  model;
 static GLmodel  light;
 
-static GLuint lightVAO;
-static GLuint lightVBO;
-
-static GLfloat rotation = 0;
-
+static GLfloat   rotation = 0;
 static glm::vec3 lightPos;
 
 
