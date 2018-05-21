@@ -4,15 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../03Shaders2.cpp \
+../04Texture.cpp \
 ../GLshader.cpp 
 
 OBJS += \
-./03Shaders2.o \
+./04Texture.o \
 ./GLshader.o 
 
 CPP_DEPS += \
-./03Shaders2.d \
+./04Texture.d \
 ./GLshader.d 
 
 
