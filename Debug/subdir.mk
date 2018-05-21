@@ -4,25 +4,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../GLcamera.cpp \
-../GLmesh.cpp \
-../GLmodel.cpp \
-../GLshader.cpp \
-../Main.cpp 
+../03Shaders2.cpp \
+../GLshader.cpp 
 
 OBJS += \
-./GLcamera.o \
-./GLmesh.o \
-./GLmodel.o \
-./GLshader.o \
-./Main.o 
+./03Shaders2.o \
+./GLshader.o 
 
 CPP_DEPS += \
-./GLcamera.d \
-./GLmesh.d \
-./GLmodel.d \
-./GLshader.d \
-./Main.d 
+./03Shaders2.d \
+./GLshader.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

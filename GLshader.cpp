@@ -1,5 +1,9 @@
 #include "GLshader.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
 GLshader::GLshader()
 {
 	this->ID = 0;
@@ -90,9 +94,6 @@ GLshader::GLshader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	// Clean up:
 	glDeleteShader(vShader);
 	glDeleteShader(fShader);
-
-	// Use this shader:
-	this->use();
 }
 
 GLshader::~GLshader()
@@ -104,12 +105,6 @@ GLshader::~GLshader()
 void GLshader::use()
 {
 	glUseProgram(this->ID);
-}
-
-
-void GLshader::setAmbience(glm::vec3 value) const
-{
-	this->setVec3("material.ambient", value);
 }
 
 
@@ -129,13 +124,6 @@ void GLshader::setFloat(const std::string &name, float value) const
 {
     glUniform1f(glGetUniformLocation(this->ID, name.c_str()), value);
 }
-
-
-void GLshader::setVec3 (const std::string &name, glm::vec3 value) const
-{
-	glUniform3f(glGetUniformLocation(this->ID, name.c_str()), value.x, value.y, value.z);
-}
-
 
 void GLshader::setMat4(const std::string &name, glm::mat4 value) const
 {
