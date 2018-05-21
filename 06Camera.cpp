@@ -12,11 +12,13 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "GLshader.h"
+#include "GLcamera.h"
 
 
 static GLFWwindow* window;
 
 static GLshader shader;
+static GLcamera camera;
 
 static GLuint VAO;
 static GLuint VBO;
@@ -63,7 +65,8 @@ void onStart()
 {
 	glEnable(GL_DEPTH_TEST);
 
-	shader = GLshader("Shaders/05Transform.vs", "Shaders/05Transform.fs");
+	shader = GLshader("Shaders/06Camera.vs", "Shaders/06Camera.fs");
+	camera = GLcamera(shader, glm::vec3(0, 0, -3), glm::vec3(0, 0, 0));
 
 	// Texture Repeat:
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -116,12 +119,9 @@ void display()
 
 	shader.use();
 
-	// Move Camera:
-	glm::mat4 view;
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
-	view = glm::rotate(view, (float)glfwGetTime() * glm::radians(25.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	unsigned int uView = glGetUniformLocation(shader.ID, "view");
-	glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(view));
+	camera.setRotation(glm::vec3(0, (float)glfwGetTime() * 50, 0));
+
+	camera.update();
 
     // Do Perspective:
 	static GLint width, height;
@@ -178,7 +178,7 @@ int main(int argc, char** argv)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-	window = glfwCreateWindow(320, 240, "Texture", NULL, NULL);
+	window = glfwCreateWindow(320, 240, "Camera", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
