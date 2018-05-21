@@ -178,7 +178,7 @@ int main(int argc, char** argv)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-	window = glfwCreateWindow(320, 240, "Texture", NULL, NULL);
+	window = glfwCreateWindow(320, 240, "Transformation", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
