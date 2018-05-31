@@ -113,6 +113,24 @@ void GLshader::setAmbience(glm::vec3 value) const
 }
 
 
+void GLshader::setDiffuse  (glm::vec3 value) const
+{
+	this->setVec3("material.diffuse", value);
+}
+
+
+void GLshader::setSpecular (glm::vec3 value) const
+{
+	this->setVec3("material.specular", value);
+}
+
+
+void GLshader::setShininess(GLubyte value) const
+{
+	this->setFloat("material.shininess", value);
+}
+
+
 void GLshader::setBool(const std::string &name, bool value) const
 {
     glUniform1i(glGetUniformLocation(this->ID, name.c_str()), (int)value);

@@ -73,9 +73,9 @@ void GLmesh::Draw(GLshader shader)
         // retrieve texture number (the N in diffuse_textureN)
         std::string number;
         std::string name = textures[i].type;
-        if(name == "textureDiffuse")
+        if(name == "diffuse")
             number = NumberToString<GLuint>(diffuseNr++);
-        else if(name == "textureSpecular")
+        else if(name == "specular")
             number = NumberToString<GLuint>(specularNr++);
 
         shader.setFloat(("material." + name + number).c_str(), i);

@@ -1,9 +1,12 @@
 #include "GLcamera.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 GLcamera::GLcamera()
 {
-	shader = NULL;
+	this->window_width  = 0;
+	this->window_height = 0;
 }
 
 float GLcamera::clampAngle(float angle)
@@ -32,10 +35,8 @@ void GLcamera::setRotation(glm::vec3 rotation)
 }
 
 
-GLcamera::GLcamera(GLshader &shader, glm::vec3 position, glm::vec3 rotation)
+GLcamera::GLcamera(glm::vec3 position, glm::vec3 rotation)
 {
-	this->shader = &shader;
-
 	setPosition(position);
 	setRotation(rotation);
 }
@@ -46,12 +47,6 @@ GLcamera::~GLcamera()
 }
 
 
-void GLcamera::setShader(GLshader &shader)
-{
-	this->shader = &shader;
-}
-
-
 void GLcamera::setWindowSize(GLint width, GLint height)
 {
 	this->window_width  = width;
@@ -59,19 +54,21 @@ void GLcamera::setWindowSize(GLint width, GLint height)
 }
 
 
-void GLcamera::update()
+void GLcamera::update(GLshader shader)
 {
+	shader.use();
+
 	glm::mat4 view;
 	view = glm::translate(view, this->position);
 	view = glm::rotate(view, glm::radians(this->rotation.x), glm::vec3(1, 0, 0));
 	view = glm::rotate(view, glm::radians(this->rotation.y), glm::vec3(0, 1, 0));
 	view = glm::rotate(view, glm::radians(this->rotation.z), glm::vec3(0, 0, 1));
 
-	shader->setMat4("view", view);
+	shader.setMat4("view", view);
 
     // Do Perspective:
 	glm::mat4 projection = glm::perspective<GLfloat>(glm::radians(45.0f),
 			this->window_width / (GLfloat)this->window_height, 0.1f, 100.0f);
 
-	shader->setMat4("projection", projection);
+	shader.setMat4("projection", projection);
 }

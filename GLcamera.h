@@ -12,11 +12,6 @@
 class GLcamera
 {
 private:
-	GLshader* shader;
-
-	glm::vec3 position;
-	glm::vec3 rotation;
-
 	GLuint window_width;
 	GLuint window_height;
 
@@ -24,18 +19,19 @@ private:
 	float clampAngle(float angle);
 
 public:
+	glm::vec3 position;
+	glm::vec3 rotation;
+
 	GLcamera();
-	GLcamera(GLshader &shader, glm::vec3 position, glm::vec3 rotation);
+	GLcamera(glm::vec3 position, glm::vec3 rotation);
 	virtual ~GLcamera();
 
-
-	void setShader(GLshader &shader);
 	void setPosition(glm::vec3 position);
 	void setRotation(glm::vec3 rotation);
 
 	void setWindowSize(GLint width, GLint height);
 
-	void update();
+	void update(GLshader shader);
 };
 
 #endif /* GLCAMERA_H_ */

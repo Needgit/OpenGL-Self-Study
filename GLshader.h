@@ -28,7 +28,10 @@ public:
 
     void use();
 
-    void setAmbience(glm::vec3 value) const;
+    void setAmbience (glm::vec3 value) const;
+    void setDiffuse  (glm::vec3 value) const;
+    void setSpecular (glm::vec3 value) const;
+    void setShininess(GLubyte value)   const;
 
     void setBool (const std::string &name, bool      value) const;
     void setInt  (const std::string &name, int       value) const;

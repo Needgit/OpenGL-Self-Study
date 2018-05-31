@@ -23,7 +23,8 @@ static GLmodel  model;
 static GLmodel  light;
 
 static GLfloat   rotation = 0;
-static glm::vec3 lightPos;
+static glm::vec3 lightPos1;
+static glm::vec3 lightPos2;
 
 
 void onStart()
@@ -31,11 +32,30 @@ void onStart()
 	glEnable(GL_DEPTH_TEST);
 
 	shader = GLshader("Shaders/Vertex.vs", "Shaders/Fragment.fs");
-	camera = GLcamera(shader, glm::vec3(0, -5, -30), glm::vec3(0, 0, 0));
+	camera = GLcamera(glm::vec3(0, -5, -30), glm::vec3(0, 0, 0));
 	camera.setWindowSize(windowWidth, windowHeight);
 
 	model  = GLmodel("Models/Frog.fbx");
 	light  = GLmodel("Models/01.fbx");
+
+	shader.setShininess(1);
+
+	shader.setVec3("pointLight[0].ambient",  glm::vec3(0.5f, 0.5f, 0.5f));
+	shader.setVec3("pointLight[0].diffuse",  glm::vec3(1.0f, 1.0f, 1.0f));
+	shader.setVec3("pointLight[0].specular", glm::vec3(0.2f, 0.2f, 0.2f));
+
+	shader.setFloat("pointLight[0].constant",  1.0f);
+	shader.setFloat("pointLight[0].linear",    0.09f);
+	shader.setFloat("pointLight[0].quadratic", 0.032f);
+
+
+	shader.setVec3("pointLight[1].ambient",  glm::vec3(0.5f, 0.5f, 0.5f));
+	shader.setVec3("pointLight[1].diffuse",  glm::vec3(1.0f, 1.0f, 1.0f));
+	shader.setVec3("pointLight[1].specular", glm::vec3(0.2f, 0.2f, 0.2f));
+
+	shader.setFloat("pointLight[1].constant",  1.0f);
+	shader.setFloat("pointLight[1].linear",    0.09f);
+	shader.setFloat("pointLight[1].quadratic", 0.032f);
 }
 
 
@@ -51,20 +71,35 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	shader.use();
-	shader.setAmbience(glm::vec3(0.5f, 0.5f, 0.5f));
+	camera.setRotation(glm::vec3(20,  rotation/*(float)glfwGetTime() * 50*/, 0));
+	camera.update(shader);
 
+
+	// Light 1
 	glm::mat4 world;
-	world = glm::translate(world, lightPos);
+	world = glm::scale(world, glm::vec3(0.25f));
+	world = glm::translate(world, lightPos1);
 	shader.setMat4("world", world);
 
-	shader.setVec3("lightPos",    lightPos);
-	shader.setVec3("lightColor",  glm::vec3(1.0f, 1.0f, 1.0f));
+	shader.setVec3("viewPos", camera.position);
+	shader.setVec3("pointLight[0].position", lightPos1 * 0.25f);
+
 	light.Draw(shader); // Draw light source...
 
 
-	camera.setRotation(glm::vec3(20,  rotation/*(float)glfwGetTime() * 50*/, 0));
-	camera.update();
+	// Light 2
+	world = glm::mat4();
+	world = glm::scale(world, glm::vec3(0.25f));
+	world = glm::translate(world, lightPos2);
+	shader.setMat4("world", world);
 
+	shader.setVec3("viewPos", camera.position);
+	shader.setVec3("pointLight[1].position", lightPos2 * 0.25f);
+
+	light.Draw(shader); // Draw light source...
+
+
+	// Frog:
 	world = glm::mat4();
 	world = glm::rotate(world, glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	shader.setMat4("world", world);
@@ -93,19 +128,31 @@ void processInput(GLFWwindow *window)
     	rotation = rotation + 1;
 
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    	lightPos.y++;
+    	lightPos1.y++;
 
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    	lightPos.y--;
+    	lightPos1.y--;
 
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    	lightPos.z--;
+    	lightPos1.z--;
 
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    	lightPos.z++;
+    	lightPos1.z++;
 
     if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-    	lightPos = glm::vec3();
+    	lightPos1 = lightPos2 = glm::vec3();
+
+    if(glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+    	lightPos2.y++;
+
+    if(glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+    	lightPos2.y--;
+
+    if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+    	lightPos2.z--;
+
+    if(glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
+    	lightPos2.z++;
 }
 
 
@@ -120,8 +167,7 @@ int main(int argc, char** argv)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 
-
-	window = glfwCreateWindow(windowWidth, windowHeight, "Texture", NULL, NULL);
+	window = glfwCreateWindow(windowWidth, windowHeight, "Frog", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
